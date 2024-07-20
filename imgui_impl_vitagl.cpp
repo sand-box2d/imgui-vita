@@ -280,8 +280,18 @@ void	ImGui_ImplVitaGL_InvalidateDeviceObjects()
 	}
 }
 
+static int SCE_CTRL_CONFIRM = SCE_CTRL_CIRCLE;
+static int SCE_CTRL_CANCEL = SCE_CTRL_CROSS;
 static bool	_ImGui_ImplVitaGL_Init(bool extended)
 {
+	sceAppUtilInit(&(SceAppUtilInitParam){}, &(SceAppUtilBootParam){});
+	int has_cross_confirm;
+	sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_ENTER_BUTTON, (int *)&has_cross_confirm);
+	if (has_cross_confirm) {
+		SCE_CTRL_CONFIRM = SCE_CTRL_CROSS;
+		SCE_CTRL_CANCEL = SCE_CTRL_CIRCLE;
+	}
+
 	sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT, SCE_TOUCH_SAMPLING_STATE_START);
 	sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG_WIDE);
 	
@@ -431,8 +441,8 @@ void ImGui_ImplVitaGL_NewFrame()
 		SceCtrlData pad;
 		int lstick_x, lstick_y = 0;
 		ImGui_ImplVitaGL_PollLeftStick(&pad, &lstick_x, &lstick_y);
-		io.NavInputs[ImGuiNavInput_Activate]  = (pad.buttons & SCE_CTRL_CROSS)    ? 1.0f : 0.0f;
-		io.NavInputs[ImGuiNavInput_Cancel]    = (pad.buttons & SCE_CTRL_CIRCLE)   ? 1.0f : 0.0f;
+		io.NavInputs[ImGuiNavInput_Activate]  = (pad.buttons & SCE_CTRL_CONFIRM)  ? 1.0f : 0.0f;
+		io.NavInputs[ImGuiNavInput_Cancel]    = (pad.buttons & SCE_CTRL_CANCEL)   ? 1.0f : 0.0f;
 		io.NavInputs[ImGuiNavInput_Input]     = (pad.buttons & SCE_CTRL_TRIANGLE) ? 1.0f : 0.0f;
 		io.NavInputs[ImGuiNavInput_Menu]      = (pad.buttons & SCE_CTRL_SQUARE)   ? 1.0f : 0.0f;
 		io.NavInputs[ImGuiNavInput_DpadLeft]  = (pad.buttons & SCE_CTRL_LEFT)     ? 1.0f : 0.0f;
