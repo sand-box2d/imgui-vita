@@ -18,6 +18,7 @@
 #include "imgui_internal.h"
 
 // Hammerill 2024
+// Force include alloca.h
 #include <alloca.h>     // alloca
 
 #include <stdio.h>      // vsnprintf, sscanf, printf
