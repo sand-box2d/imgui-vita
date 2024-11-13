@@ -17,6 +17,9 @@
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui_internal.h"
 
+// Hammerill 2024
+#include <alloca.h>     // alloca
+
 #include <stdio.h>      // vsnprintf, sscanf, printf
 #if !defined(alloca)
 #ifdef _WIN32
